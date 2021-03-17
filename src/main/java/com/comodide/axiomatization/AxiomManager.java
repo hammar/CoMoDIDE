@@ -179,6 +179,7 @@ public class AxiomManager
 		this.modelManager.applyChange(add);
 	}
 
+	
 	/**
 	 * This method creates a new axiom and initializes it to the vaule of 
 	 * <code>this.owlDataFacotry.getOWLSubClassOfAxiom(...)</code>.
