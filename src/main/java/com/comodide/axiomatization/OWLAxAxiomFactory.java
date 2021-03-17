@@ -28,14 +28,23 @@ public class OWLAxAxiomFactory
 
 	private OWLModelManager modelManager;
 	private OWLDataFactory  owlDataFactory;
-
+	
+	/**
+	 * The constructor for OWLAxAxiom class. 
+	 * 
+	 * @param modelManager is the refence to OWLModelManager for this class.
+	 */
 	public OWLAxAxiomFactory(OWLModelManager modelManager)
 	{
 		this.modelManager = modelManager;
 		this.owlDataFactory = this.modelManager.getOWLDataFactory();
 		owlThing = this.owlDataFactory.getOWLThing();
 	}
-
+	/**
+	 * 
+	 * @param axiomType
+	 * @param edgeCell
+	 */
 	public OWLAxiom createAxiomFromEdge(OWLAxAxiomType axiomType, PropertyEdgeCell edgeCell)
 	{
 		// Get Cells
@@ -49,6 +58,13 @@ public class OWLAxAxiomFactory
 		return createAxiom(axiomType, source, property, target);
 	}
 
+	/**
+	 * 
+	 * @param axiomType
+	 * @param source
+	 * @param property
+	 * @param target
+	 */
 	public OWLAxiom createAxiom(OWLAxAxiomType axiomType, OWLEntity source, OWLEntity property, OWLEntity target)
 	{
 		// Convert OWLEntities to Expressions (or thereabouts, technically the
