@@ -41,9 +41,13 @@ public class OWLAxAxiomFactory
 		owlThing = this.owlDataFactory.getOWLThing();
 	}
 	/**
+	 * This method method creates an axiom from the given type and edge cell. It gets the source
+	 * and targets cells from the edge cells and then extracts each of their entities to pass to the 
+	 * <code>createAxiom</code> method.
 	 * 
-	 * @param axiomType
-	 * @param edgeCell
+	 * @param axiomType is the type of the new axiom.
+	 * @param edgeCell 
+	 * @return This returns the new axiom created from the given edge cell.
 	 */
 	public OWLAxiom createAxiomFromEdge(OWLAxAxiomType axiomType, PropertyEdgeCell edgeCell)
 	{
@@ -59,11 +63,17 @@ public class OWLAxAxiomFactory
 	}
 
 	/**
+	 * This method searches the known axiom types to create the axiom. Each type can have a different
+	 * way of creating the new axiom. For example, some types need <code>OWLObjectSomeValuesFrom</code> objects
+	 * to create the axiom, while others need <code>OWLObjectAllValuesFrom</code> objects.
+	 * <p>
+	 * If the given axiom type is not a know type, then <code>log.error</code> is called and null is returned.
 	 * 
-	 * @param axiomType
-	 * @param source
-	 * @param property
-	 * @param target
+	 * @param axiomType determines how the new axiom will be created.
+	 * @param source is converted into a class expression and used to initialize the new axiom.
+	 * @param property is converted into an object property expression and used to initialize the new axiom.
+	 * @param targetis converted into a class expression and used to initialize the new axiom.
+	 * @return This returns the new axiom.
 	 */
 	public OWLAxiom createAxiom(OWLAxAxiomType axiomType, OWLEntity source, OWLEntity property, OWLEntity target)
 	{

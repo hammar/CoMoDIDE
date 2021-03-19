@@ -40,7 +40,7 @@ public class SimpleAxiomParser
 	 * 
 	 * Using this on complex axioms will throw big errors :(
 	 * 
-	 * @return
+	 * @return This returns the parsed axiom.
 	 */
 	// @formatter:on
 	public mxCell parseSimpleAxiom(OWLSubClassOfAxiom axiom)
@@ -77,6 +77,15 @@ public class SimpleAxiomParser
 		return edge;
 	}
 
+	/**
+	 * This method extracts and wraps the left and right classes from the given left and right expressions.
+	 * It then makes an edge, setting it's source to the sub class wrapper, and the target to the super class wrapper.
+	 *  
+	 * @param axiom 
+	 * @param left sets the source of the new edge cell.
+	 * @param right sets the target of the new edge cell.
+	 * @return This returns a sub class edge.
+	 */
 	private SubClassEdgeCell atomicSubclass(OWLAxiom axiom, OWLClassExpression left, OWLClassExpression right)
 	{
 		// Extract classes
@@ -94,6 +103,16 @@ public class SimpleAxiomParser
 		return subclassEdgeCell;
 	}
 
+	/**
+	 * This method extracts the property and class from the given left expression and the class from the given right expresion.
+	 * The left and right classes are wrapped into target and source cells. The property is used to initialize an edege,
+	 * and the edge's source and target are set the the wrappers.
+	 * 
+	 * @param axiom 
+	 * @param left sets the source of the new edge cell.
+	 * @param right sets the target of the new edge cell.
+	 * @return The new edge cell initialized with the property of the left expression.
+	 */
 	private PropertyEdgeCell leftComplex(OWLAxiom axiom, OWLClassExpression left, OWLClassExpression right)
 	{
 		/* Parse Left */
@@ -115,6 +134,16 @@ public class SimpleAxiomParser
 		return relationEdge;
 	}
 
+	/**
+	 * This method extracts the property and class from the given right expression and the class from the given left expresion.
+	 * The left and right classes are wrapped into target and source cells. The property is used to initialize an edege,
+	 * and the edge's source and target are set the the wrappers.
+	 * 
+	 * @param axiom is unused in this method.
+	 * @param left sets the source of the new edge cell.
+	 * @param right sets the target of the new edge cell.
+	 * @return The new edge cell initialized with the property of the right expression.
+	 */
 	private PropertyEdgeCell rightComplex(OWLAxiom axiom, OWLClassExpression left, OWLClassExpression right)
 	{
 		// Extract left Class
