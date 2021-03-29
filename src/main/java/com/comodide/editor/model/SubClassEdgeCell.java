@@ -11,6 +11,7 @@ public class SubClassEdgeCell extends mxCell {
 	private static final long serialVersionUID = -967537018367040076L;
 	private static final String STYLE = SDConstants.subclassEdgeStyle;
 	
+	/** The constructor for this class. */
 	public SubClassEdgeCell() {
 		this.id = OWLRDFVocabulary.RDFS_SUBCLASS_OF.getIRI().toString();
 		this.value = "subClassOf";
