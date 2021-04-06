@@ -17,6 +17,13 @@ import com.comodide.editor.model.PropertyEdgeCell;
 import com.comodide.editor.model.SubClassEdgeCell;
 import com.mxgraph.model.mxCell;
 
+/**
+ * 
+ * 
+ * @author cogan
+ *
+ */
+
 public class SimpleAxiomParser
 {
 	/** Logging */
@@ -78,8 +85,8 @@ public class SimpleAxiomParser
 	}
 
 	/**
-	 * This method extracts and wraps the left and right classes from the given left and right expressions.
-	 * It then makes an edge, setting it's source to the sub class wrapper, and the target to the super class wrapper.
+	 * This extracts and wraps the left and right classes from the given left and right expressions. It then makes 
+	 * an edge, setting it's source to the sub class wrapper, and the target to the super class wrapper.
 	 *  
 	 * @param axiom 
 	 * @param left sets the source of the new edge cell.

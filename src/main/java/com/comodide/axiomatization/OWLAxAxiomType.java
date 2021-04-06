@@ -1,5 +1,12 @@
 package com.comodide.axiomatization;
 
+/**
+ * 
+ * 
+ * @author cogan
+ *
+ */
+
 public enum OWLAxAxiomType
 {
 	//@formatter:off
@@ -22,16 +29,26 @@ public enum OWLAxAxiomType
 	
 	private String axiomType;
 
+	/** Private constructor for this enum. Sets <code>this.axiomType</code>. */
 	OWLAxAxiomType(String axiomType)
 	{
 		this.axiomType = axiomType;
 	}
 
+	/** Returns the current value of <code>this.axiomType</code>. */
 	public String getAxiomType()
 	{
 		return this.axiomType;
 	}
 
+	/**
+	 * This finds the axiom type matching the given string. If the type does not exist, then
+	 * an <code>IllegalArgumentException</code> is thrown.
+	 * 
+	 * @param owlAxAxiomType is the name of an axiom type.
+	 * @return Returns a <code>OwlAxAxiomType</code> object that matches the given string.
+	 * @exception <code>IllegalArgumentException</code> is thrown when the given string is not a valid axiom type.
+	 */
 	public static OWLAxAxiomType fromString(String owlAxAxiomType)
 	{
 		for (OWLAxAxiomType oaat : OWLAxAxiomType.values())

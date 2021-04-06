@@ -18,8 +18,9 @@ public class EditorKeyboardHandler extends mxKeyboardHandler
 {
 
 	/**
+	 * The constructor for this class.
 	 * 
-	 * @param graphComponent
+	 * @param graphComponent is the super class of this class.
 	 */
 	public EditorKeyboardHandler(mxGraphComponent graphComponent)
 	{

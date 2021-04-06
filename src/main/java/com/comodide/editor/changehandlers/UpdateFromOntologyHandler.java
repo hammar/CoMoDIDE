@@ -58,17 +58,29 @@ public class UpdateFromOntologyHandler
 	private SchemaDiagram schemaDiagram;
 	private mxGraphModel  graphModel;
 
+	/**
+	 * The constructor for this class.
+	 * 
+	 * @param schemaDiagram sets the reference to the schema diagram for this class.
+	 * @param modelManager sets the reference to the model manager for this class.
+	 */
 	public UpdateFromOntologyHandler(SchemaDiagram schemaDiagram, OWLModelManager modelManager)
 	{
 		this.schemaDiagram = schemaDiagram;
 		this.graphModel = (mxGraphModel) schemaDiagram.getModel();
 	}
 	
+	/**
+	 * This method handles how different types of axioms are added to the ontology. If the axiom is not a know type,
+	 * then <code>log.info</code> is called.
+	 * 
+	 * @param axiom is the axiom that will be added to the ontology.
+	 * @param ontology is a reference to the active ontology.
+	 */
 	public void handleAddAxiom(OWLAxiom axiom, OWLOntology ontology) {
 		// If we're open for business
 		if (!this.schemaDiagram.isLock())
 		{
-		
 			// Handle class, datatype, or property declarations
 			if (axiom.isOfType(AxiomType.DECLARATION))
 			{
@@ -90,6 +102,13 @@ public class UpdateFromOntologyHandler
 		}
 	}
 
+	/**
+	 * Determines the type of change happening to the ontology and calls the appropriate handle change method.
+	 * <p>
+	 * If the change is not a know type, then <code>log.info</code> is called.
+	 * 
+	 * @param change is the type of change occuring.
+	 */
 	public void handle(OWLOntologyChange change)
 	{
 		// Unpack the OntologyChange
@@ -114,6 +133,13 @@ public class UpdateFromOntologyHandler
 		}
 	}
 
+	/**
+	 * Determines the type of the given axiom and either removes the entity from the schema diagram, calls another
+	 * handle remove method, or rerenders the edges of the axiom's property. 
+	 * 
+	 * @param axiom is the axiom being removed from the ontology.
+	 * @param ontology is a reference to the active ontology.
+	 */
 	private void handleRemoveAxiom(OWLAxiom axiom, OWLOntology ontology) {
 		if (axiom.isOfType(AxiomType.DECLARATION))
 		{
@@ -140,8 +166,9 @@ public class UpdateFromOntologyHandler
 	/**
 	 * This method traverses the ontology looking for the classes that should be connected by the property as an edge
 	 * on the schema diagram. 
-	 * @param property
-	 * @param ontology
+	 * 
+	 * @param property is used to find and return each of its edge's sources and targets.
+	 * @param ontology is a reference to the active ontology.
 	 * @return List of class pairs to be connected by an edge (left is source, right is target). 
 	 */
 	private Set<Pair<OWLEntity,OWLEntity>> getEdgeSourcesAndTargets(OWLProperty property, OWLOntology ontology) {
@@ -235,7 +262,13 @@ public class UpdateFromOntologyHandler
 		return retVal;
 	}
 
-	
+	/**
+	 * This handles when a declaration axiom is added to the active ontology. Once it has determined if the entity of the
+	 * axiom is a class, datatype, object property, or data property it updates the graph model and the schema diagram.
+	 * 
+	 * @param ontology is a reference to the active ontology.
+	 * @param axiom is the declaration axiom being added to the active ontology.
+	 */
 	private void handleAddDeclaration(OWLOntology ontology, OWLAxiom axiom)
 	{
 		// Unpack data from Declaration
@@ -313,6 +346,13 @@ public class UpdateFromOntologyHandler
 		}
 	}
 
+	/**
+	 * This handles when a sub class axiom is being removed from the active ontology. It finds and removes the reference to
+	 * the given axiom's sub class and super class. If the axiom has restrictions it rerenders the edges.
+	 * 
+	 * @param axiom is the sub class axiom being removed from the ontology.
+	 * @param ontology is a reference to the active ontology.
+	 */
 	private void handleRemoveSubClassOfAxiom(OWLSubClassOfAxiom axiom, OWLOntology ontology) {
 		OWLClassExpression superClassExpression = axiom.getSuperClass();
 		OWLClassExpression subClassExpression = axiom.getSubClass();
@@ -345,6 +385,13 @@ public class UpdateFromOntologyHandler
 		}
 	}
 	
+	/**
+	 * Rerenders the edges of a property by finding all of the edge cells and constructing a pair of source and
+	 * target entities. If the pair is not in the set of valid edges it is removed. Every unrendered edge is rendered.
+	 * 
+	 * @param property provides a list of source and target entities that will be rerendered.
+	 * @param ontology is a reference to the active ontology.
+	 */
 	private void reRenderAllPropertyEdges(OWLProperty property, OWLOntology ontology) {
 		Set<Pair<OWLEntity,OWLEntity>> stillValidEdges = getEdgeSourcesAndTargets(property, ontology);
 		
@@ -392,9 +439,16 @@ public class UpdateFromOntologyHandler
 		}
 	}
 	
+	/**
+	 *  This gets the parent IRI from the subject of the axiom and then uses it to find the appropriate cell to move.
+	 *  Once it has found the cell, it updates the graph model.
+	 *  
+	 * @param axiom is the annotation assertion axiom being added to the active ontology.
+	 * @param ontology is a reference to the active ontology.
+	 */
 	private void handleAddAnnotationAssertionAxiom(OWLAnnotationAssertionAxiom axiom, OWLOntology ontology) {
 	
-		// Unpack the handled assertion; if it is a a nested
+		// Unpack the handled assertion; if it is a nested
 		// entity positioning assertion with a double value proceed
 		OWLAnnotationSubject subject = axiom.getSubject();
 		OWLAnnotationProperty property = axiom.getProperty();
@@ -449,6 +503,14 @@ public class UpdateFromOntologyHandler
 		}
 	}
 	
+	/**
+	 * This handles when a sub class axiom is being added to the active ontology. It updates the graph model if the
+	 * super and sub class expressions of the axiom are named. If they aren't, it finds the property of the restricting class
+	 * and rerenders it's edges. 
+	 * 
+	 * @param axiom is the sub class axiom being added to the active ontology.
+	 * @param ontology is a reference to the active ontology.
+	 */
 	private void handleAddSubClassOfAxiom(OWLSubClassOfAxiom axiom, OWLOntology ontology)
 	{
 		OWLClassExpression superClassExpression = axiom.getSuperClass();

@@ -18,6 +18,14 @@ import org.slf4j.LoggerFactory;
 import com.comodide.editor.model.ComodideCell;
 import com.comodide.editor.model.PropertyEdgeCell;
 
+/**
+ * The purpose of this class is to handle the creation of new <code>OWLAxiom</code> objects. It can 
+ * handle adding axioms given an axiom type and either an edge cell or a source, property, and target entity.
+ * 
+ * @author cogan
+ *
+ */
+
 public class OWLAxAxiomFactory
 {
 	/* Bookkeeping */
@@ -30,9 +38,9 @@ public class OWLAxAxiomFactory
 	private OWLDataFactory  owlDataFactory;
 	
 	/**
-	 * The constructor for OWLAxAxiom class. 
+	 * The constructor for this class. 
 	 * 
-	 * @param modelManager is the refence to OWLModelManager for this class.
+	 * @param modelManager is the reference to OWLModelManager for this class.
 	 */
 	public OWLAxAxiomFactory(OWLModelManager modelManager)
 	{
@@ -41,13 +49,13 @@ public class OWLAxAxiomFactory
 		owlThing = this.owlDataFactory.getOWLThing();
 	}
 	/**
-	 * This method method creates an axiom from the given type and edge cell. It gets the source
-	 * and targets cells from the edge cells and then extracts each of their entities to pass to the 
-	 * <code>createAxiom</code> method.
+	 * This finds the source and edge cells from the given edge cell. The source, target, and property entities are then
+	 * extracted from the source, target, and edge cells respectively. A new axiom is constructed with the given axiom type,
+	 * source, property, and target. 
 	 * 
 	 * @param axiomType is the type of the new axiom.
-	 * @param edgeCell 
-	 * @return This returns the new axiom created from the given edge cell.
+	 * @param edgeCell defines the source, property, and target for the new axiom.
+	 * @return Returns the new axiom.
 	 */
 	public OWLAxiom createAxiomFromEdge(OWLAxAxiomType axiomType, PropertyEdgeCell edgeCell)
 	{
@@ -63,7 +71,7 @@ public class OWLAxAxiomFactory
 	}
 
 	/**
-	 * This method searches the known axiom types to create the axiom. Each type can have a different
+	 * This searches the known axiom types to create the axiom. Each type can have a different
 	 * way of creating the new axiom. For example, some types need <code>OWLObjectSomeValuesFrom</code> objects
 	 * to create the axiom, while others need <code>OWLObjectAllValuesFrom</code> objects.
 	 * <p>

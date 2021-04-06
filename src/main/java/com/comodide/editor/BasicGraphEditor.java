@@ -85,6 +85,10 @@ public class BasicGraphEditor extends JPanel
 	protected mxRubberband      rubberband;
 	protected mxKeyboardHandler keyboardHandler;
 
+	/**
+	 * Listens for when the user presses undo and implements an invoke method.
+	 * Invoke calls the undo manager to handle the event.
+	 */
 	protected mxIEventListener undoHandler = new mxIEventListener()
 	{
 		public void invoke(Object source, mxEventObject evt)
@@ -93,6 +97,10 @@ public class BasicGraphEditor extends JPanel
 		}
 	};
 
+	/**
+	 * Listens for when the user changes a tracker and implements an invoke method.
+	 * Invoke passes the method, <code>setModified</code>, the value <code>true</code>.
+	 */
 	protected mxIEventListener changeTracker = new mxIEventListener()
 	{
 		public void invoke(Object source, mxEventObject evt)
@@ -101,6 +109,11 @@ public class BasicGraphEditor extends JPanel
 		}
 	};
 
+	/**
+	 * The constructor for this class.
+	 * 
+	 * @param component sets the state of <code>graphCompontent</code>.
+	 */
 	public BasicGraphEditor(mxGraphComponent component)
 	{
 		// Stores a reference to the graph and creates the command history
@@ -171,22 +184,33 @@ public class BasicGraphEditor extends JPanel
 		installListeners();
 	}
 
+	/** Returns a new undo manager. */
 	protected mxUndoManager createUndoManager()
 	{
 		return new mxUndoManager();
 	}
 
+	/**	Sets rubberband and keyboard handler to new instances. */
 	protected void installHandlers()
 	{
 		rubberband = new mxRubberband(graphComponent);
 		keyboardHandler = new EditorKeyboardHandler(graphComponent);
 	}
 
+	/**	TODO Finish this method!
+	 * <p>
+	 * Adds a new <code>EditorToolBar</code>
+	 */
 	protected void installToolBar()
 	{
 //		add(new EditorToolBar(this, JToolBar.HORIZONTAL), BorderLayout.NORTH);
 	}
 
+	/**	
+	 * Initializes a new status bar to the ready state and sets it's boarder.
+	 * 
+	 * @return Returns the new status bar. 
+	 */
 	protected JLabel createStatusBar()
 	{
 		JLabel statusBar = new JLabel(mxResources.get("ready"));
@@ -195,6 +219,12 @@ public class BasicGraphEditor extends JPanel
 		return statusBar;
 	}
 
+	/**
+	 * Constructs an event listener that will repaint a specified region in the graph compontent.
+	 * This implements an Invoke method that finds the region to repaint, and repaints it.
+	 * <p>
+	 * If the region is unspecified then everything is repainted.
+	 */
 	protected void installRepaintListener()
 	{
 		graphComponent.getGraph().addListener(mxEvent.REPAINT, new mxIEventListener()
@@ -217,6 +247,12 @@ public class BasicGraphEditor extends JPanel
 		});
 	}
 
+	/**
+	 * This adds a new palette with the given title to the library pane. It also listens when for the library pane is resized,
+	 * and implements a method, <code>componentResized</code>, to update the widths of all of the palettets in the pane.
+	 * 
+	 * @return Returns the new palette.
+	 */
 	public EditorPalette insertPalette(String title)
 	{
 		final EditorPalette palette    = new EditorPalette();
@@ -228,9 +264,6 @@ public class BasicGraphEditor extends JPanel
 		// Updates the widths of the palettes if the container size changes
 		libraryPane.addComponentListener(new ComponentAdapter()
 		{
-			/**
-			 * 
-			 */
 			public void componentResized(ComponentEvent e)
 			{
 				int w = scrollPane.getWidth() - scrollPane.getVerticalScrollBar().getWidth();
@@ -242,6 +275,10 @@ public class BasicGraphEditor extends JPanel
 		return palette;
 	}
 
+	/** 
+	 * This method adjusts the scale of the graph when the mouse wheel is moved. The status is updated to show the new scale
+	 * of the graph as a percentage.
+	 */
 	protected void mouseWheelMoved(MouseWheelEvent e)
 	{
 		if (e.getWheelRotation() < 0)
@@ -256,6 +293,11 @@ public class BasicGraphEditor extends JPanel
 		status(mxResources.get("scale") + ": " + (int) (100 * graphComponent.getGraph().getView().getScale()) + "%");
 	}
 
+	/**
+	 * Constructs a new popup menu from three action listeners. The first listens for the fit of the page, the second
+	 * listens for when to draw the labels, and the third listens for buffering. The three listeners are added to the new
+	 * popup menu, and the menu is displayed.
+	 */
 	protected void showOutlinePopupMenu(MouseEvent e)
 	{
 		Point             pt   = SwingUtilities.convertPoint(e.getComponent(), e.getPoint(), graphComponent);
@@ -264,9 +306,6 @@ public class BasicGraphEditor extends JPanel
 
 		item.addActionListener(new ActionListener()
 		{
-			/**
-			 * 
-			 */
 			public void actionPerformed(ActionEvent e)
 			{
 				graphOutline.setFitPage(!graphOutline.isFitPage());
@@ -279,9 +318,6 @@ public class BasicGraphEditor extends JPanel
 
 		item2.addActionListener(new ActionListener()
 		{
-			/**
-			 * 
-			 */
 			public void actionPerformed(ActionEvent e)
 			{
 				graphOutline.setDrawLabels(!graphOutline.isDrawLabels());
@@ -294,9 +330,6 @@ public class BasicGraphEditor extends JPanel
 
 		item3.addActionListener(new ActionListener()
 		{
-			/**
-			 * 
-			 */
 			public void actionPerformed(ActionEvent e)
 			{
 				graphOutline.setTripleBuffered(!graphOutline.isTripleBuffered());
@@ -325,19 +358,21 @@ public class BasicGraphEditor extends JPanel
 	 * e.consume(); }
 	 */
 
+	/** Updates status to reflect the current x and y positions of the cursor. */
 	protected void mouseLocationChanged(MouseEvent e)
 	{
 		status(e.getX() + ", " + e.getY());
 	}
 
+	/**  
+	 * This installs listeners for mouse related event such as wheel movement and clicking. Each listener is added
+	 * to this graph outline and this graph component.
+	 */
 	protected void installListeners()
 	{
 		// Installs mouse wheel listener for zooming
 		MouseWheelListener wheelTracker = new MouseWheelListener()
 		{
-			/**
-			 * 
-			 */
 			public void mouseWheelMoved(MouseWheelEvent e)
 			{
 				if (e.getSource() instanceof mxGraphOutline || e.isControlDown())
@@ -355,19 +390,12 @@ public class BasicGraphEditor extends JPanel
 		// Installs the popup menu in the outline
 		graphOutline.addMouseListener(new MouseAdapter()
 		{
-
-			/**
-			 * 
-			 */
 			public void mousePressed(MouseEvent e)
 			{
 				// Handles context menu on the Mac where the trigger is on mousepressed
 				mouseReleased(e);
 			}
 
-			/**
-			 * 
-			 */
 			public void mouseReleased(MouseEvent e)
 			{
 				if (e.isPopupTrigger())
@@ -426,6 +454,11 @@ public class BasicGraphEditor extends JPanel
 		});
 	}
 
+	/** 
+	 * Updates the current and given files so that the current file is the old file and the given file is the current file.
+	 * <code>firePropertyChange</code> is notified that a bound property has been changed.
+	 * @param file the new current file.
+	 */
 	public void setCurrentFile(File file)
 	{
 		File oldValue = currentFile;
@@ -434,11 +467,19 @@ public class BasicGraphEditor extends JPanel
 		firePropertyChange("currentFile", oldValue, file);
 	}
 
+	/** Returns a refence to the current file. */
 	public File getCurrentFile()
 	{
 		return currentFile;
 	}
 
+	/**
+	 * Updates the current and given values of <code>this.modified</code> so that the current value of modified is the old value,
+	 * and the given value of modified is the current value. <code>firePropertyChange</code> is notified that a bound 
+	 * property has been changed.
+	 * 
+	 * @param modified the new value of <code>this.modified</code>.
+	 */
 	public void setModified(boolean modified)
 	{
 		boolean oldValue = this.modified;
@@ -447,35 +488,41 @@ public class BasicGraphEditor extends JPanel
 		firePropertyChange("modified", oldValue, modified);
 	}
 
+	/** Returns true if this has been modified. */
 	public boolean isModified()
 	{
 		return modified;
 	}
 
+	/** Returns a reference to the graph component. */
 	public mxGraphComponent getGraphComponent()
 	{
 		return graphComponent;
 	}
 
+	/** Returns a reference to the graph outline. */
 	public mxGraphOutline getGraphOutline()
 	{
 		return graphOutline;
 	}
 
+	/** Returns a reference to the library pane. */
 	public JTabbedPane getLibraryPane()
 	{
 		return libraryPane;
 	}
 
+	/** Returns a reference to the undo manager. */
 	public mxUndoManager getUndoManager()
 	{
 		return undoManager;
 	}
 
 	/**
+	 * Constructs an instance of a binding given the name and the action.
 	 * 
-	 * @param name
-	 * @param action
+	 * @param name is the name of the action
+	 * @param action is the action being bound to the given name
 	 * @return a new Action bound to the specified string name
 	 */
 	public Action bind(String name, final Action action)
@@ -484,9 +531,12 @@ public class BasicGraphEditor extends JPanel
 	}
 
 	/**
+	 * Binds the action argument to the given name and icon. This is done by constructing a new action and 
+	 * passing name and icon as arguments. A new method is implemented to call <code>action.actionPerformed(...)</code>.
 	 * 
-	 * @param name
-	 * @param action
+	 * @param name is the name of the action
+	 * @param action calls action performed method and provides the short description for the new action.
+	 * @param iconUrl is passed to the new action. If it is null, then the new action's icon will also be null.
 	 * @return a new Action bound to the specified string name and icon
 	 */
 	@SuppressWarnings("serial")
@@ -506,6 +556,11 @@ public class BasicGraphEditor extends JPanel
 		return newAction;
 	}
 
+	/**
+	 * Updates the text of this status label to string msg.
+	 * 
+	 * @param msg is the new text for the status bar label
+	 */
 	public void status(String msg)
 	{
 		statusBar.setText(msg);
@@ -525,6 +580,7 @@ public class BasicGraphEditor extends JPanel
 	 * // Shows the modal dialog and waits about.setVisible(true); } }
 	 */
 
+	/** This method disposes of the current frame. */
 	public void exit()
 	{
 		JFrame frame = (JFrame) SwingUtilities.windowForComponent(this);
@@ -535,6 +591,15 @@ public class BasicGraphEditor extends JPanel
 		}
 	}
 
+	/**
+	 * This calls the UI manager to set the look and feel to the given string clazz. The frame component is updated, and
+	 * <code>keyboardHandler</code> is set to a new instance.
+	 * <p>
+	 * The UI manager will throw an exeption if the given string clazz is not a valid class name. This method will catch and
+	 * print the exception and it's backtrace..
+	 * 
+	 * @param clazz is the name of a class that implements the look and feel.
+	 */
 	public void setLookAndFeel(String clazz)
 	{
 		JFrame frame = (JFrame) SwingUtilities.windowForComponent(this);
@@ -556,6 +621,12 @@ public class BasicGraphEditor extends JPanel
 		}
 	}
 
+	/**
+	 * Generates a frame with the given menu bar. 
+	 * 
+	 * @param menuBar is the menu bar for the new frame.
+	 * @return Returns the new frame.
+	 */
 	public JFrame createFrame(JMenuBar menuBar)
 	{
 		JFrame frame = new JFrame();
@@ -638,6 +709,11 @@ public class BasicGraphEditor extends JPanel
 
 	/**
 	 * Creates a layout instance for the given identifier.
+	 * <p>
+	 * If the given identifier is not provided, then null is returned.
+	 * 
+	 * @param ident the identifier that will determine the layout
+	 * @parm animate TODO this param is unused in this function
 	 */
 	protected mxIGraphLayout createLayout(String ident, boolean animate)
 	{

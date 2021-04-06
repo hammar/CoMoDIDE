@@ -31,6 +31,11 @@ public class ComodideEditor extends BasicGraphEditor
 {
     private static final long serialVersionUID = -4601740824088314699L;
     
+    /**
+     * The constructor for this class.
+     * 
+     * @param component is the super class of this class.
+     */
     public ComodideEditor(SchemaDiagramComponent component)
     {
         super(component);

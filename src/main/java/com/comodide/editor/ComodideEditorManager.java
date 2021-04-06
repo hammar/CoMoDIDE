@@ -19,10 +19,18 @@ public class ComodideEditorManager implements OWLOntologyChangeListener, OWLMode
 	private final UpdateFromOntologyHandler updateFromOntologyHandler;
 	private final OWLModelManager modelManager;
 
+	/**
+	 * This method gets the reference to this schema diagram.
+	 */
 	public SchemaDiagram getSchemaDiagram() {
 		return schemaDiagram;
 	}
 
+	/**
+	 * The constructor for this class.
+	 * 
+	 * @param modelManager is the reference to this modelManager
+	 */
 	public ComodideEditorManager(OWLModelManager modelManager)
 	{
 		// Used to keep track of changes and clearing/re-rendering editor

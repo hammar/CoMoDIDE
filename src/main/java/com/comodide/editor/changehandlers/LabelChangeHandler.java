@@ -39,12 +39,28 @@ public class LabelChangeHandler
 	/** Used for adding positional arguments to updatedCells */
 	private OWLModelManager modelManager;
 	
+	/**
+	 * The constructor for this class.
+	 * 
+	 * @param modelManager sets the reference to the model manager for this class.
+	 * @param schemaDiagram sets the reference to the schema diagram (TODO)
+	 */
 	public LabelChangeHandler(OWLModelManager modelManager, SchemaDiagram schemaDiagram)
 	{
 		this.axiomManager = AxiomManager.getInstance(modelManager); //, schemaDiagram);
 		this.modelManager = modelManager;
 	}
 
+	/**
+	 * This ensures that the IRI created by the new label is new. If it is new and the cell is an edge, 
+	 * then a handle edge method is called, otherwise, a handle node method is called.
+	 * 
+	 * @param cell is passed to the handle change method to recieve it's new label.
+	 * @param newLabel is the active namespace that will be the new label of the given cell.
+	 * @return An entity with the new label returned from one of the handle change methods.
+	 * @exception ComodideException is thrown when the given cell is not an instance of a <code>ComodideCell</code>.
+	 * @exception NameClashException is thrown when the IRI created from the new label already exsists.
+	 */
 	public OWLEntity handle(mxCell cell, String newLabel) throws ComodideException
 	{
 		if (!(cell instanceof ComodideCell)) {
@@ -71,6 +87,17 @@ public class LabelChangeHandler
 		}
 	}
 
+	/**
+	 * If the given edge has a named property and the property's IRI is not the default IRI, then a new property
+	 * IRI is constructed and the old IRI is renamed to the new one.
+	 * <p>
+	 * If it doesn't meet the criteria, then a new property is constructed. 
+	 * This can call <code>log.warn</code> if the source cell is a data type cell. 
+	 * 
+	 * @param cell provides the property entity that will be renamed to the new label.
+	 * @param newLabel creates the new IRI for the cell's property.
+	 * @return This returns an entity constructed from the property and the new IRI.
+	 */
 	private OWLEntity handleEdgeLabelChange(mxCell cell, String newLabel)
 	{
 		// Unpack useful things
@@ -141,6 +168,16 @@ public class LabelChangeHandler
 		}
 	}
 
+	/**
+	 * If the given node cell is a named class, then a new IRI is constructed from the new label. If it is not named,
+	 * then the axiom manager adds a new class with the new label.
+	 * <p>
+	 * This returns null if the given cell is not a class.
+	 * 
+	 * @param cell provides the class that will be renamed to the new label.
+	 * @param newLabel creates the new IRI for the cell's property.
+	 * @return This returns an entity constructed from the class and the new IRI.
+	 */
 	private OWLEntity handleNodeLabelChange(mxCell cell, String newLabel)
 	{
 		if (cell instanceof ClassCell)

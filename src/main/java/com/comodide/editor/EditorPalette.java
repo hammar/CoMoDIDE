@@ -113,16 +113,22 @@ public class EditorPalette extends JPanel
 		});
 	}
 
+	/** Sets the color of the gradient to the given color. */
 	public void setGradientColor(Color c)
 	{
 		gradientColor = c;
 	}
 
+	/** Returns the current color of the gradient. */
 	public Color getGradientColor()
 	{
 		return gradientColor;
 	}
 
+	/**
+	 * 
+	 * @param g
+	 */
 	public void paintComponent(Graphics g)
 	{
 		if (gradientColor == null)
@@ -145,11 +151,17 @@ public class EditorPalette extends JPanel
 		}
 	}
 
+	/** This sets the selection to null. */
 	public void clearSelection()
 	{
 		setSelectionEntry(null, null);
 	}
 
+	/**
+	 * 
+	 * @param entry
+	 * @param t
+	 */
 	public void setSelectionEntry(JLabel entry, mxGraphTransferable t)
 	{
 		JLabel previous = selectedEntry;
@@ -171,6 +183,10 @@ public class EditorPalette extends JPanel
 				new mxEventObject(mxEvent.SELECT, "entry", selectedEntry, "transferable", t, "previous", previous));
 	}
 
+	/**
+	 * 
+	 * @param width
+	 */
 	public void setPreferredWidth(int width)
 	{
 		int cols = Math.max(1, width / 55);
