@@ -18,7 +18,7 @@ import com.comodide.editor.model.SubClassEdgeCell;
 import com.mxgraph.model.mxCell;
 
 /**
- * 
+ * (TODO)
  * 
  * @author cogan
  *
@@ -37,6 +37,22 @@ public class SimpleAxiomParser
 
 	// @formatter:off
 	/**
+	 * This gets the left and right class expressions from the given axiom's sub class and super class respectively. If the type
+	 * for both the left and right expression is <code>OWL_CLASS</code>, then the edge to return is set to the result of the
+	 * <code>atomicSubclass</code> method call. The <code>atomicSubclass</code> method is passed the given axiom and 
+	 * the left and right expressions.
+	 * <p>
+	 * If the type for just the left is <code>OWL_CLASS</code>, then the edge to return is set to the result of the 
+	 * <code>rightComplex</code> method call. The <code>rightComplex</code> method is passed the given axiom and the left and 
+	 * right expressions.
+	 * <p>
+	 * If the type for just the right is <code>OWL_CLASS</code>, then the edge to return is set to the result of the 
+	 * <code>leftComplex</code> method call. The <code>leftComplex</code> method is passed the given axiom and the left and right 
+	 * expressions.
+	 * <p>
+	 * If the type for neither expression is <code>OWL_CLASS</code>, then the edge to return is set null and <code>log.warn</code>
+	 * is called.
+	 * <p>
 	 * This method is only capable of parsing axioms of the following forms 
 	 * 
 	 * A \sqsubseteq B 
@@ -45,10 +61,11 @@ public class SimpleAxiomParser
 	 * \forall R.A \sqsubseteq B 
 	 * \exists R.A \sqsubseteq B
 	 * 
-	 * Using this on complex axioms will throw big errors :(
-	 * 
+	 * @param axiom is the axiom that will be parsed to either an <code>atomicSubclass</code>, a <code>rightComplex</code>, 
+	 * 				or a <code>leftComplex</code>.
 	 * @return This returns the parsed axiom.
 	 */
+	//Using this on complex axioms will throw big errors :(
 	// @formatter:on
 	public mxCell parseSimpleAxiom(OWLSubClassOfAxiom axiom)
 	{
@@ -146,7 +163,7 @@ public class SimpleAxiomParser
 	 * The left and right classes are wrapped into target and source cells. The property is used to initialize an edege,
 	 * and the edge's source and target are set the the wrappers.
 	 * 
-	 * @param axiom is unused in this method.
+	 * @param axiom is unused in this method. (TODO)
 	 * @param left sets the source of the new edge cell.
 	 * @param right sets the target of the new edge cell.
 	 * @return The new edge cell initialized with the property of the right expression.

@@ -38,7 +38,9 @@ public class OWLAxAxiomFactory
 	private OWLDataFactory  owlDataFactory;
 	
 	/**
-	 * The constructor for this class. 
+	 * The constructor for this class. This model manager is set to the given model manager, and <code>this.owlDataFactory</code>
+	 * and <code>owlThing</code> are initialized to the values returned by <code>this.modelManager.getOWLDataFactory</code> and 
+	 * <code>this.owlDataFactory.getOWLThing</code> respectively.
 	 * 
 	 * @param modelManager is the reference to OWLModelManager for this class.
 	 */
@@ -49,13 +51,13 @@ public class OWLAxAxiomFactory
 		owlThing = this.owlDataFactory.getOWLThing();
 	}
 	/**
-	 * This finds the source and edge cells from the given edge cell. The source, target, and property entities are then
-	 * extracted from the source, target, and edge cells respectively. A new axiom is constructed with the given axiom type,
-	 * source, property, and target. 
+	 * This gets the source and target cells from the given edge cell. The source, target, and property entities are then
+	 * extracted from the source, target, and edge cells respectively. The given axiom type and the source, property, and 
+	 * target entities are then passed to the <code>createAxiom</code> method. 
 	 * 
 	 * @param axiomType is the type of the new axiom.
 	 * @param edgeCell defines the source, property, and target for the new axiom.
-	 * @return Returns the new axiom.
+	 * @return Returns the axiom result of the <code>createAxiom</code> method call.
 	 */
 	public OWLAxiom createAxiomFromEdge(OWLAxAxiomType axiomType, PropertyEdgeCell edgeCell)
 	{
@@ -71,16 +73,15 @@ public class OWLAxAxiomFactory
 	}
 
 	/**
-	 * This searches the known axiom types to create the axiom. Each type can have a different
-	 * way of creating the new axiom. For example, some types need <code>OWLObjectSomeValuesFrom</code> objects
-	 * to create the axiom, while others need <code>OWLObjectAllValuesFrom</code> objects.
+	 * This method converts the given property entity into an object property expression, and the source and target entities into
+	 * class expressions. It then determines how to create the axiom by the given type.
 	 * <p>
 	 * If the given axiom type is not a know type, then <code>log.error</code> is called and null is returned.
 	 * 
 	 * @param axiomType determines how the new axiom will be created.
 	 * @param source is converted into a class expression and used to initialize the new axiom.
 	 * @param property is converted into an object property expression and used to initialize the new axiom.
-	 * @param targetis converted into a class expression and used to initialize the new axiom.
+	 * @param target is converted into a class expression and used to initialize the new axiom.
 	 * @return This returns the new axiom.
 	 */
 	public OWLAxiom createAxiom(OWLAxAxiomType axiomType, OWLEntity source, OWLEntity property, OWLEntity target)

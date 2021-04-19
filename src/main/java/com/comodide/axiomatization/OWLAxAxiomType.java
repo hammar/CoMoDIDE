@@ -1,7 +1,8 @@
 package com.comodide.axiomatization;
 
 /**
- * 
+ * This is an enum containing all of the valid axiom types. It contains logic for getting the state of this enum and
+ * getting an <code>OWLAxAxiomType</code> from a string.
  * 
  * @author cogan
  *
@@ -29,7 +30,11 @@ public enum OWLAxAxiomType
 	
 	private String axiomType;
 
-	/** Private constructor for this enum. Sets <code>this.axiomType</code>. */
+	/** 
+	 * Private constructor for this enum. It sets <code>this.axiomType</code> to the given type. 
+	 * 
+	 * @param axiomType is a valid axiom type.
+	 */
 	OWLAxAxiomType(String axiomType)
 	{
 		this.axiomType = axiomType;

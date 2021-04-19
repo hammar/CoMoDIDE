@@ -62,12 +62,12 @@ public class AxiomManager
 	private static AxiomManager instance = null;
 
 	/**
-	 * This gets the static instance of this class.
+	 * Gets the static instance of this class.
 	 * <p>
-	 * If the instance field has not yet been initialized, then it is initialized to a new AxiomManager.
+	 * If the instance field has not yet been initialized, then it is set to a new <code>AxiomManager</code>.
 	 * 
-	 * @param modelManager is used to fulfill the parameter requirements of the AxiomManager constructor.
-	 * @return This returns the static instance of this AxiomManager.
+	 * @param modelManager is passed to the private constructor if this <code>AxiomManager</code> needs to be instantiated.
+	 * @return This returns the static instance of this <code>AxiomManager</code>.
 	 */
 	public static AxiomManager getInstance(OWLModelManager modelManager)
 	{
@@ -98,12 +98,13 @@ public class AxiomManager
 	private static final ShortFormProvider shortFormProvider = new SimpleShortFormProvider();
 
 	/**
-	 * This is a private constructor for the AxionManager class.
+	 * The private constructor for this singleton class. 
 	 * <p>
-	 * If there is not an active ontology, then the log will send a warning message.
+	 * Once this model manager is set to the given model manager, it retrieves the active ontology. If there is an active
+	 * ontology then the rest of the fields are instantiated, otherwise, the log sends a warning message.
 	 * 
-	 * @param modelManager is used to get the active ontology, and initialize
-	 * 					   AxiomManager's fields.
+	 * @param modelManager initializes <code>this.modelManager</code> along with other fields in this class. It is also
+	 * 					   responsible for retrieving the active ontology.
 	 */
 	private AxiomManager(OWLModelManager modelManager)
 	{
@@ -135,8 +136,9 @@ public class AxiomManager
 	}
 
 	/**
-	 * Embeds the active ontology into a set. The ontology manager and the set are then 
-	 * used as arguments for a new <code>EntityRenamer</code>.
+	 * This method contains the logic for initializing <code>this.owlEntityRenamer</code>. It creates a new 
+	 * <code>OWLEntityRenamer</code> by getting the ontology manager and embedding the active ontology
+	 * into a set. The ontology manager and set are then passed to the constructor of the new <code>OWLEntityRenamer</code>.
 	 */
 	private void createEntityRenamer()
 	{
@@ -150,12 +152,11 @@ public class AxiomManager
 	}
 
 	/**
-	 * Constructs a new axiom and initializes its type and edgeCell 
-	 * with the given axiom type and edge cell.
+	 * Constructs a new axiom by passing the given type and edge cell to <code>this.owlaxAxiomFactory.createAxiomFromEdge</code>.
 	 * 
-	 * @param axiomType is passed as an argument to the new axiom.
-	 * @param edgeCell is passed as an argument to the new axiom.
-	 * @return the new axiom.
+	 * @param axiomType is passed to the <code>createAxiomFromEdge</code> method in the axiom factory class.
+	 * @param edgeCell is passed to the <code>createAxiomFromEdge</code> method in the axiom factory class.
+	 * @return Returns the new axiom.
 	 */
 	public OWLAxiom createOWLAxAxiom(OWLAxAxiomType axiomType, PropertyEdgeCell edgeCell)
 	{
@@ -165,8 +166,8 @@ public class AxiomManager
 	}
 
 	/**
-	 * Constructs a new axiom from the given axiom type and edge Cell. An <code>AddAxiom</code> object is 
-	 * created and applied to the active ontology.
+	 * Constructs a new axiom by passing the given type and edge cell to the <code>createOWLAxAxiom</code> method.
+	 * An <code>AddAxiom</code> object is created and applied to the active ontology.
 	 * 
 	 * @param axiomType is passed as an argument to the new axiom.
 	 * @param edgeCell is passed as an argument to the new axiom.
@@ -318,12 +319,14 @@ public class AxiomManager
 	}
 
 	/**
-	 * Determines if there is a class with the given class name.
+	 * Determines if there is a class with the given sting className. If there is, the <code>renameClass</code> method is called
+	 * and passed the given name.
 	 * <p>
-	 * If there are no classes with the give name, then one is added. 
+	 * If there are no classes with the given name, then the <code>addNewClass</code> method is called and passed the
+	 * given name. 
 	 * 
-	 * @param className is the name of the target class.
-	 * @return This returns a class with the target name as an <code>OWLEntity</code>.
+	 * @param className is the name of a class that this method will rename or add.
+	 * @return This returns a class with the given name as an <code>OWLEntity</code>.
 	 */
 	public OWLEntity handleClass(String className)
 	{
@@ -343,10 +346,10 @@ public class AxiomManager
 	}
 
 	/**
-	 * Determines if a class with the given class name exists. If no class with the name exists, then
-	 * a new one is added.
+	 * Determines if a class with the given class name exists. If there is not a class with the given name, then 
+	 * the <code>addNewClass</code> method is called and passed the given name.
 	 * 
-	 * @param className is the name of the target class.
+	 * @param className is the name of the class this method will find or add.
 	 * @return This returns a class with the given class name.
 	 */
 	public OWLEntity findOrAddClass(String className)
@@ -362,15 +365,17 @@ public class AxiomManager
 	}
 
 	/**
-	 * This generates a set of entities that match the target entity.
+	 * This generates a set of entities by calling <code>this.owlEntityFinder.getMatchingOWLEntities</code> and passing 
+	 * the given string entity to the <code>getMatchingOWLEntities</code> method.
 	 * <p>
 	 * If there is more than one element in the set, an exception is thrown.
 	 * <p>
 	 * If there are no elements in the set, then null is returned.
 	 * 
-	 * @param entity is the target entity.
-	 * @return This returns an entity with the target entity name.
-	 * @exception MultipleMatchesException is thrown when there are multiple entities that match the target entity.
+	 * @param entity is the string representation of the entity this method attempts to find.
+	 * @return This returns an entity matching the given string entity.
+	 * @exception MultipleMatchesException is thrown if <code>this.owlEntityFinder.getMatchingOWLEntities</code> finds
+	 * 									   multiple entities that match the given string entity.
 	 */
 	public OWLEntity findEntity(String entity) throws MultipleMatchesException
 	{
@@ -391,16 +396,19 @@ public class AxiomManager
 	}
 
 	/**
-	 * This generates a set of classes that share the name as string clazz.
+	 * This generates a set of classes by calling <code>this.owlEntityFinder.getMatchingOWLClasses</code> and passing the
+	 * <code>getMatchingOWLClasses</code> method the given string clazz.
 	 * <p>
-	 * If there is more than one element in the set, an exception is thrown.
+	 * If there is more than one element in the set, the <code>MultipleMatchesException</code> is thrown and 
+	 * <code>log.warn</code> is called. This method includes a catch block for the <code>MultipleMatchesException</code>.
+	 * It generates an array of classes, and returns the first class in the array.
 	 * <p>
 	 * If there are no elements in the set, then null is returned.
 	 *  
-	 * @param clazz is the name of the target class.
-	 * @return Returns a class with the given name.
-	 * @exception MultipleMatchesException is thrown when there are multiple 
-	 * 									   classes that match the target class.
+	 * @param clazz is the string representation of the class this method attempts to find.
+	 * @return Returns a class matching the given string clazz.
+	 * @exception MultipleMatchesException is thrown if <code>this.owlEntityFinder.getMatchingOWLClasses</code> finds
+	 * 									   multiple classes that match the given string clazz.
 	 */
 	public OWLClass findClass(String clazz)
 	{
@@ -436,14 +444,16 @@ public class AxiomManager
 			return cls;
 		}
 	}
-
-	/** This method is called when previousLabel.equals("") */
+	
 	/**
-	 * This method constructs a declaration axiom by creating the IRI 
-	 * and the OWLAPI construct for the class. An axiom change is then created,
-	 * and the change is applied to the active ontology.
+	 * This method starts by constructing a class IRI with the active namespace and the given string str. The class
+	 * IRI is then passed to <code>this.owlDataFactory.getOWLClass</code> to create the new class. Before an 
+	 * <code>AddAxiom</code> object can be created, this method gets the declaration axiom from the new class. The 
+	 * declaration axiom is passed to a new <code>AddAxiom</code>, and the change is applied to the active ontology.
+	 * <p>
+	 * This method is called when previousLabel.equals("")
 	 * 
-	 * @param str is the name of the new class and is used to construct the <code>classIRI</code>.
+	 * @param str is the name of the new class and is used to construct the class IRI.
 	 * @return Returns the new class.
 	 */
 	public OWLClass addNewClass(String str)
@@ -463,13 +473,14 @@ public class AxiomManager
 		// Return a reference to the class that was added
 		return owlClass;
 	}
-
-	/** This method should be called when !previousLabel.equals("") */
+	
 	/**
-	 * Constructs a new class IRI using the active namespace and the given string newName.
-	 * A list of <code>OWLOntologyChange</code> objects is generated using <code>this.owlEntityRenamer.ChangeIRI</code>.
-	 * The given old class and the new IRI are passed to <code>changeIRI</code> method call. Finally, the list of changes
+	 * Constructs a new class IRI using the active namespace and the given string newName. A list of 
+	 * <code>OWLOntologyChange</code> objects is generated using <code>this.owlEntityRenamer.ChangeIRI</code>.
+	 * The given old class and the new IRI are passed to the <code>changeIRI</code> method. Finally, the list of changes
 	 * is applied to the active ontology.
+	 * <p>
+	 * This method should be called when !previousLabel.equals("")
 	 * 
 	 * @param oldClass is passed to the <code>changeIRI</code> method.
 	 * @param newName is used to create the new IRI for the given old class.
@@ -490,8 +501,8 @@ public class AxiomManager
 	}
 
 	/**
-	 * This method should be called when newValue == null
-	 */
+	* This method should be called when newValue == null
+	*/
 	public void removeClass()
 	{
 		// TODO Why is this empty???!!! (3/15/20)
@@ -514,14 +525,15 @@ public class AxiomManager
 	/**
 	 * Generates a set of <code>OWLDatatype</code> that match the given string datatype.
 	 * <p>
-	 * If there is more than one element in the set, an exception is thrown.
+	 * If there is more than one element in the set, a <code>MultipleMatchesException</code> is thrown. This method 
+	 * includes a catch block for the <code>MultipleMatchesException</code>. It generates an array of <code>OWLDatatype</code>, 
+	 * and returns the first data type in the array.
 	 * <p>
 	 * If there are no elements in the set, then null is returned. 
 	 * 
 	 * @param datatype is the name of the target <code>OWLDatatype</code>.
 	 * @return Returns the <code>OWLDatatype</code> that matches the given string.
-	 * @exception MultipleMatchesException is thrown when there are multiple 
-	 * 			    					   data types that match the given string.
+	 * @exception MultipleMatchesException is thrown when there are multiple data types that match the given string.
 	 */
 	public OWLDatatype findDatatype(String datatype)
 	{
@@ -557,12 +569,23 @@ public class AxiomManager
 	}
 
 	/**
-	 * Checks if there is a property with the given property name. If there is not, it creates one 
-	 * and adds an axiom for each of the EdgeCreationAxioms as selected in the Pattern Configuration view.
+	 * This calls the <code>findObjectProperty</code> method to find the property with the given property name. If 
+	 * there is not a property with the given name, then a new one is added and a set of <code>EdgeCreationAxiom</code>
+	 * is created to determine which axioms to create.
+	 * <p>
+	 * If the set contains <code>EdgeCreationAxiom.RDFS_DOMAIN_RANGE</code> then the property, domain, and range are used
+	 * to create <code>OWLObjectPropertyDomainAxiom</code> and <code>OWLObjectPropertyRangeAxiom</code> objects. The objects
+	 * are then packaged into <code>AddAxiom</code> objects and applied to the active ontology.
+	 * <p>
+	 * If the set contains <code>EdgeCreationAxiom.SCOPED_DOMAIN</code> or <code>EdgeCreationAxiom.SCOPED_RANGE</code>, then
+	 * the property and range will be used to construct <code>OWLObjectSomeValuesFrom</code> and 
+	 * <code>OWLObjectSomeValuesFrom</code> objects respectively. The domain is used to generate the sub class axiom, which
+	 * is passed to the <code>AddAxiom</code> object and applied to the active ontology.
 	 * 
 	 * @param propertyName is the name of the target property.
-	 * @param domain is passed the <code>AddAxiom</code> object.
-	 * @param range is passed the <code>AddAxiom</code> object.
+	 * @param domain is used to create a domain axiom or a sub class axiom depending on which axioms are in the set.
+	 * @param range is used to create a range axiom, an <code>OWLObjectSomeValuesFrom</code> object, or an 
+	 * 				<code>OWLObjectAllValuesFrom</code> object depending on which axioms are in the set.
 	 * @return This returns the property with the given name.
 	 */
 	public OWLObjectProperty handleObjectProperty(String propertyName, OWLEntity domain, OWLEntity range)
@@ -621,14 +644,13 @@ public class AxiomManager
 	}
 	
 	/**
-	 * This method generates a set of <code>OWLObjectProperty</code> objects that match the given property name.
-	 * <p>
-	 * If there is more than one element in the set, an exception is thrown.
+	 * This calls the <code>getMatchingOWLObjectProperties</code> method from this <code>owlEntityFinder</code> to generate
+	 * a set of properties that match the given property name.
 	 * <p>
 	 * If there are no elements in the set, then null is returned.
 	 * 
-	 * @param propertyName is the name of the target property.
-	 * @return This returns the property that matches the given property name.
+	 * @param propertyName is the name of the property this method will search for.
+	 * @return Returns the first property in the set whose short form matches the given property name.
 	 */
 	public OWLObjectProperty findObjectProperty(String propertyName)
 	{
@@ -653,10 +675,12 @@ public class AxiomManager
 	}
 
 	/**
-	 * A new <code>OWLObjectProperty</code> is constructed with the property IRI for this class. The new object property is
-	 * passed to a new Declaration Axiom. An <code>AddAxiom</code> object is created and applied to the active ontology.
+	 * This creates an <code>IRI</code> for the new <code>OWLObjectProperty</code> from the active namespace and the given property name.
+	 * The new <code>IRI</code> is passed to <code>this.owlDataFactory.getOWLObjectProperty</code>, which will initialize a new
+	 * <code>OWLObjectProperty</code>. This method finishes by creating an <code>AddAxiom</code> object and applying it to the
+	 * active ontology.
 	 * 
-	 * @param propteryName is the active namespace.
+	 * @param propteryName is used to create an <code>IRI</code> for the new <code>OWLObjectProperty</code>.
 	 * @return This returns the new object property.
 	 */
 	public OWLObjectProperty addNewObjectProperty(String propertyName)
@@ -677,13 +701,15 @@ public class AxiomManager
 	}
 
 	/**
-	 * Generates a set of data properties that match the given property name. If there are no data properties with
-	 * the given name, then a new property is added and a set of <code>EdgeCreationAxiom</code> is generated to see which axioms
-	 * to create.
+	 * This calls the <code>findDataProperty</code> method to find a data property with the given property name. If it does not
+	 * find one, then <code>addNewDataProperty</code> is called to add a property with the given name and a set of
+	 * <code>EdgeCreationAxiom</code> is created to determine which axioms to create.
 	 * <p>
-	 * For each axiom created, an array of <code>AddAxiom</code> objects is created and applied to the active ontology.
+	 * If the set contains <code>EdgeCreationAxiom.RDFS_DOMAIN_RANGE</code>, then the property, domain, and range are used
+	 * to create <code>OWLObjectPropertyDomainAxiom</code> and <code>OWLObjectPropertyRangeAxiom</code> objects. The objects
+	 * are then packaged into <code>AddAxiom</code> objects and applied to the active ontology.
 	 * 
-	 * @param propertyName is the name of the target property.
+	 * @param propertyName is the name of the property this method will either find or create.
 	 * @param domain is used create a domain axiom, which is passed as a parameter to the <code>ArrayList</code> of 
 	 * 				 <code>AddAxiom</code> objects.
 	 * @param range is used create a range axiom, which is passed as a parameter to the <code>ArrayList</code> of 
@@ -724,13 +750,13 @@ public class AxiomManager
 	}
 	
 	/**
-	 * Generates a set of data properties that match the given property name using
-	 * <code>this.owlEntityFinder.getMatchingOWLDataProperties</code>.
+	 * This calls the <code>getMatchingOWLDataProperties</code> method from this <code>owlEntityFinder</code> to generate
+	 * a set of data properties that match the given property name.
 	 * <p>
 	 * If there are no elements in the set, then null is returned.
 	 * 
-	 * @param propertyName is the name of the target data property.
-	 * @return This returns the data property that has the given property name.
+	 * @param propertyName is the name of the property this method will search for.
+	 * @return Returns the first data property in the set whose short form matches the given property name.
 	 */
 	public OWLDataProperty findDataProperty(String propertyName)
 	{
@@ -755,10 +781,12 @@ public class AxiomManager
 	}
 
 	/**
-	 * A new <code>OWLDataProperty</code> is constructed with the property IRI for this class. The new data property is then
-	 * passed to a new Declaration Axiom. An <code>AddAxiom</code> object is created and applied to the active ontology.
+	 * This creates an <code>IRI</code> for the new <code>OWLDataProperty</code> from the active namespace and the given property
+	 * name. The new <code>IRI</code> is passed to <code>this.owlDataFactory.getOWLDataProperty</code>, which will initialize a 
+	 * new <code>OWLDataProperty</code>. This method finishes by creating an <code>AddAxiom</code> object and applying it to the
+	 * active ontology.
 	 * 
-	 * @param propertyName is the active namespace.
+	 * @param propteryName is used to create an <code>IRI</code> for the new <code>OWLDataProperty</code>.
 	 * @return This returns the new data property.
 	 */
 	public OWLDataProperty addNewDataProperty(String propertyName)
@@ -791,12 +819,13 @@ public class AxiomManager
 	}
 
 	/**
-	 * Constructs a new axiom with the given axiom type and edge cell. The active ontology is then searched for a matching
-	 * axiom.
+	 * Constructs a new axiom by passing the given type and edge cell to the <code>createAxiomFromEdge</code> method in this
+	 * <code>owlaxAxiomFactory</code>. The active ontology is then searched for an axiom that matches the newly created axiom.
 	 * 
-	 * @param axiomType is used to construct a new axiom.
-	 * @param edgeCell is used to construct a new axiom.
-	 * @return Returns true if there is a matching axiom in the active ontology.
+	 * @param axiomType is used to construct the axiom that will be compared to all of the axioms in the active ontology.
+	 * @param edgeCell is used to construct the axiom that will be compared to all of the axioms in the active ontology.
+	 * @return Returns true if there is an axiom in the active ontology that matches the axiom created from the given type
+	 * 		   and edge cell.
 	 */
 	public boolean matchOWLAxAxiomType(OWLAxAxiomType axiomType, PropertyEdgeCell edgeCell)
 	{
@@ -813,12 +842,14 @@ public class AxiomManager
 	}
 
 	/**
-	 * This method creates a subClass axiom using the given source and target, and then searches
-	 * the active active ontology for a matching subClass axiom.
+	 * Creates a sub class axiom by passing the given source and target to <code>this.owlDataFactory.getOWLSubClassOfAxiom</code>.
+	 * The active ontology is then searched for a sub class that matches the newly created sub class.
 	 * 
-	 * @param source is used to create a subClass axiom.
-	 * @param target is used to create a subClass axiom.
-	 * @return This returns true if there is a matching <code>subClassAxiom</code>.
+	 * @param source is used to create the sub class axiom that will be compared to all of the sub class axioms in
+	 * 		  the active ontology.
+	 * @param target is used to create the sub class axiom that will be compared to all of the sub class axioms in
+	 * 		  the active ontology.
+	 * @return This returns true if there is a matching sub class.
 	 */
 	public boolean matchSubClassAxiom(OWLClass source, OWLClass target)
 	{
@@ -837,11 +868,15 @@ public class AxiomManager
 
 	/**
 	 * Converts the source argument into an <code>OWLObjectPropertyExpression</code>, and constructs a subClass axiom using
-	 * the source expression and the given target expression. The active ontology is then searched for a matching subClass.
+	 * the source expression and the given target expression. The active ontology is then searched for a axioms with matching
+	 * source expressions and sub class axioms.
 	 * 
-	 * @param source is used to create a subClass axiom and for searching for properties with the target source.
-	 * @param targetPropertyExpression is used to create a subClass axiom.
-	 * @return Returns true if there is a matching axiom in the active ontology.
+	 * @param source is converted to a source property expression and used to search the active ontology for
+	 * 		  axioms with matching source expressions.
+	 * @param targetPropertyExpression is used to create a subClass axiom. If an axiom with a matching source expression is found,
+	 * 		  then it is checked for a matching sub class.
+	 * @return Returns true if there is a sub property axiom in the active ontology with the same source expression and sub class
+	 * 		   axiom.
 	 */
 	public boolean matchSubPropertyAxiom(OWLEntity source, OWLObjectProperty targePropertyExpression)
 	{

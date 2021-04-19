@@ -1,0 +1,11 @@
+com.comodide
+com.comodide.axiomatization
+com.comodide.editor
+com.comodide.editor.changehandlers
+com.comodide.editor.model
+com.comodide.exceptions
+com.comodide.messaging
+com.comodide.patterns
+com.comodide.rendering
+com.comodide.telemetry
+com.comodide.views

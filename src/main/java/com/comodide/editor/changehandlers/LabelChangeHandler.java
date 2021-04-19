@@ -40,7 +40,8 @@ public class LabelChangeHandler
 	private OWLModelManager modelManager;
 	
 	/**
-	 * The constructor for this class.
+	 * The constructor for this class. It sets the reference to the axiom manager and this model manager to the given
+	 * model manager.
 	 * 
 	 * @param modelManager sets the reference to the model manager for this class.
 	 * @param schemaDiagram sets the reference to the schema diagram (TODO)
@@ -52,14 +53,17 @@ public class LabelChangeHandler
 	}
 
 	/**
-	 * This ensures that the IRI created by the new label is new. If it is new and the cell is an edge, 
-	 * then a handle edge method is called, otherwise, a handle node method is called.
+	 * Ensures that the IRI created by the new label is new. If it is not new, then an exception is thrown.
+	 * <p>
+	 * If the given cell is an edge, then the <code>handleEdgeLabelChange</code> method is called and passed the given cell 
+	 * and new label, otherwise, the <code>handleNodeLabelChange</code> method is called and passed the given cell and new label.
 	 * 
-	 * @param cell is passed to the handle change method to recieve it's new label.
-	 * @param newLabel is the active namespace that will be the new label of the given cell.
+	 * @param cell is passed to the <code>handleEdgeLabelChange</code> method or the <code>handleNodeLabelChange</code> method 
+	 * 			   to receive it's new label.
+	 * @param newLabel will be the new label of the given cell if it is a unique label.
 	 * @return An entity with the new label returned from one of the handle change methods.
 	 * @exception ComodideException is thrown when the given cell is not an instance of a <code>ComodideCell</code>.
-	 * @exception NameClashException is thrown when the IRI created from the new label already exsists.
+	 * @exception NameClashException is thrown when the IRI created from the new label already exists.
 	 */
 	public OWLEntity handle(mxCell cell, String newLabel) throws ComodideException
 	{
