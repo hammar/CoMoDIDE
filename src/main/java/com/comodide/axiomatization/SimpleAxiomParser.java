@@ -61,8 +61,7 @@ public class SimpleAxiomParser
 	 * \forall R.A \sqsubseteq B 
 	 * \exists R.A \sqsubseteq B
 	 * 
-	 * @param axiom is the axiom that will be parsed to either an <code>atomicSubclass</code>, a <code>rightComplex</code>, 
-	 * 				or a <code>leftComplex</code>.
+	 * @param axiom will be parsed based on the expression type of its sub class and super class. 
 	 * @return This returns the parsed axiom.
 	 */
 	//Using this on complex axioms will throw big errors :(
@@ -105,7 +104,7 @@ public class SimpleAxiomParser
 	 * This extracts and wraps the left and right classes from the given left and right expressions. It then makes 
 	 * an edge, setting it's source to the sub class wrapper, and the target to the super class wrapper.
 	 *  
-	 * @param axiom 
+	 * @param axiom (TODO)
 	 * @param left sets the source of the new edge cell.
 	 * @param right sets the target of the new edge cell.
 	 * @return This returns a sub class edge.
@@ -128,11 +127,11 @@ public class SimpleAxiomParser
 	}
 
 	/**
-	 * This method extracts the property and class from the given left expression and the class from the given right expresion.
-	 * The left and right classes are wrapped into target and source cells. The property is used to initialize an edege,
+	 * This method extracts the property and class from the given left expression and the class from the given right expression.
+	 * The left and right classes are wrapped into target and source cells. The property is used to initialize an edge,
 	 * and the edge's source and target are set the the wrappers.
 	 * 
-	 * @param axiom 
+	 * @param axiom (TODO)
 	 * @param left sets the source of the new edge cell.
 	 * @param right sets the target of the new edge cell.
 	 * @return The new edge cell initialized with the property of the left expression.
@@ -159,11 +158,11 @@ public class SimpleAxiomParser
 	}
 
 	/**
-	 * This method extracts the property and class from the given right expression and the class from the given left expresion.
-	 * The left and right classes are wrapped into target and source cells. The property is used to initialize an edege,
+	 * This method extracts the property and class from the given right expression and the class from the given left expression.
+	 * The left and right classes are wrapped into target and source cells. The property is used to initialize an edge,
 	 * and the edge's source and target are set the the wrappers.
 	 * 
-	 * @param axiom is unused in this method. (TODO)
+	 * @param axiom (TODO)
 	 * @param left sets the source of the new edge cell.
 	 * @param right sets the target of the new edge cell.
 	 * @return The new edge cell initialized with the property of the right expression.

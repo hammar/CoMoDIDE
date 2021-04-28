@@ -571,7 +571,7 @@ public class AxiomManager
 	/**
 	 * This calls the <code>findObjectProperty</code> method to find the property with the given property name. If 
 	 * there is not a property with the given name, then a new one is added and a set of <code>EdgeCreationAxiom</code>
-	 * is created to determine which axioms to create.
+	 * objects is created to determine which axioms to create.
 	 * <p>
 	 * If the set contains <code>EdgeCreationAxiom.RDFS_DOMAIN_RANGE</code> then the property, domain, and range are used
 	 * to create <code>OWLObjectPropertyDomainAxiom</code> and <code>OWLObjectPropertyRangeAxiom</code> objects. The objects

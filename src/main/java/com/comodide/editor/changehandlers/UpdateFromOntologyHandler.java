@@ -49,6 +49,13 @@ import com.mxgraph.model.mxGeometry;
 import com.mxgraph.model.mxGraphModel;
 import com.mxgraph.model.mxICell;
 
+/**
+ * (TODO)
+ * 
+ * @author cogan
+ *
+ */
+
 public class UpdateFromOntologyHandler
 {
 	/** Logging */
@@ -71,8 +78,14 @@ public class UpdateFromOntologyHandler
 	}
 	
 	/**
-	 * This method handles how different types of axioms are added to the ontology. If the axiom is not a know type,
-	 * then <code>log.info</code> is called.
+	 * Handles how different types of axioms are added to the ontology. If the given axiom is of type <code>DECLARATION</code>,
+	 * then the private <code>handleAddDeclaration</code> method is passed the given ontology and axiom. If the axiom is 
+	 * of type <code>SUBCLASS_OF</code>, then the private <code>handleAddSubClassOfAxiom</code> method is passed the given 
+	 * axiom as a sub class axiom and the given ontology. Finally, if the axiom is of type <code>SUBCLASS_OF</code>, then 
+	 * the private <code>handleAddAnnotationAssertionAxiom</code> method is passed the given axiom as an annotation assertion 
+	 * axiom and the given ontology.
+	 * <p>
+	 * If the axiom is not a know type, then <code>log.info</code> is called.
 	 * 
 	 * @param axiom is the axiom that will be added to the ontology.
 	 * @param ontology is a reference to the active ontology.
@@ -103,11 +116,16 @@ public class UpdateFromOntologyHandler
 	}
 
 	/**
-	 * Determines the type of change happening to the ontology and calls the appropriate handle change method.
+	 * The ontology and axiom are unpacked from the given change and stored in local variables. If the schema diagram is not 
+	 * locked, then this method will check if the given change is an <code>AddAxiom</code> or a <code>RemoveAxiom</code>.
+	 * The ontology and axiom will be passed to the private <code>handleAddAxiom</code> method or the private
+	 * <code>handleRemoveAxiom</code> method depending on the type of change.
 	 * <p>
-	 * If the change is not a know type, then <code>log.info</code> is called.
+	 * If the change is not an <code>AddAxiom</code> or a <code>RemoveAxiom</code>, then <code>log.info</code> is called to log
+	 * the unsupported change.
 	 * 
-	 * @param change is the type of change occuring.
+	 * @param change is the type of change that will occur to the active ontology. This method supports changes that will add
+	 * 				 or remove axioms from the ontology.
 	 */
 	public void handle(OWLOntologyChange change)
 	{
@@ -134,8 +152,19 @@ public class UpdateFromOntologyHandler
 	}
 
 	/**
-	 * Determines the type of the given axiom and either removes the entity from the schema diagram, calls another
-	 * handle remove method, or rerenders the edges of the axiom's property. 
+	 * Handles when an axiom is being removed from the given ontology. This method checks the type of the given axiom to determine
+	 * how it will be removed.
+	 * <p>
+	 * If the axiom is of type <code>DECLARATION</code>, then the axiom will be cast as a declaration axiom and it's entity will
+	 * be unpacked. <code>schemaDiagram.removeOwlEntity</code> method call is passed the entity.
+	 * <p>
+	 * If the axiom is of type <code>SUBCLASS_OF</code>, then the axiom will be cast to <code>OWLSubClassOfAxiom</code> and passed
+	 * to the <code>handleRemoveAxiom</code> method along with the given ontology.
+	 * <p>
+	 * If the axiom is of type <code>OBJECT_PROPERTY_DOMAIN</code>, <code>OBJECT_PROPERTY_RANGE</code>, 
+	 * <code>DATA_PROPERTY_DOMAIN</code>, or <code>DATA_PROPERTY_RANGE</code>, then axiom is cast to an
+	 * <code>OWLUnaryPropertyAxiom</code> collection of <code>OWLProperty</code> objects. The property of the cast axiom is 
+	 * unpacked and passed to the <code>reRenderAllPropertyEdges</code> along with the given ontology.
 	 * 
 	 * @param axiom is the axiom being removed from the ontology.
 	 * @param ontology is a reference to the active ontology.
@@ -165,7 +194,7 @@ public class UpdateFromOntologyHandler
 	
 	/**
 	 * This method traverses the ontology looking for the classes that should be connected by the property as an edge
-	 * on the schema diagram. 
+	 * on the schema diagram. (TODO)
 	 * 
 	 * @param property is used to find and return each of its edge's sources and targets.
 	 * @param ontology is a reference to the active ontology.
@@ -262,7 +291,7 @@ public class UpdateFromOntologyHandler
 		return retVal;
 	}
 
-	/**
+	/** (TODO)
 	 * This handles when a declaration axiom is added to the active ontology. Once it has determined if the entity of the
 	 * axiom is a class, datatype, object property, or data property it updates the graph model and the schema diagram.
 	 * 

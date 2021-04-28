@@ -28,6 +28,16 @@ import com.comodide.exceptions.NameClashException;
 import com.comodide.rendering.PositioningOperations;
 import com.mxgraph.model.mxCell;
 
+/**
+ * The purpose of this class to handle any label changes. When the handle method is called, it ensures that the cell passed to it
+ * is an instance of a <code>ComodideCell</code> and that the new label passed to it is unique. If it can guarantee both are true,
+ * then the given cell and label are passed to one of the two private handle methods depending on if the given cell is an edge,
+ * and the label change is completed.
+ * 
+ * @author cogan
+ *
+ */
+
 public class LabelChangeHandler
 {
 	/** Logging */
@@ -40,11 +50,10 @@ public class LabelChangeHandler
 	private OWLModelManager modelManager;
 	
 	/**
-	 * The constructor for this class. It sets the reference to the axiom manager and this model manager to the given
-	 * model manager.
+	 * The constructor for this class.
 	 * 
 	 * @param modelManager sets the reference to the model manager for this class.
-	 * @param schemaDiagram sets the reference to the schema diagram (TODO)
+	 * @param schemaDiagram sets the reference to the schema diagram
 	 */
 	public LabelChangeHandler(OWLModelManager modelManager, SchemaDiagram schemaDiagram)
 	{
@@ -92,15 +101,25 @@ public class LabelChangeHandler
 	}
 
 	/**
-	 * If the given edge has a named property and the property's IRI is not the default IRI, then a new property
-	 * IRI is constructed and the old IRI is renamed to the new one.
+	 * This method converts the given cell into a <code>ComdideCell</code> and stores a reference to it's property.
+	 * If the property of the cell is not null, is named, and does not have a default IRI, then the renaming operation will begin.
 	 * <p>
-	 * If it doesn't meet the criteria, then a new property is constructed. 
-	 * This can call <code>log.warn</code> if the source cell is a data type cell. 
+	 * The renaming operation constructs a new IRI using the given label. The property and the new IRI are then passed to the 
+	 * <code>changeIRI</code> method in the <code>OWLEntityRenamer</code> class to create a list of ontology changes. The changes
+	 * are applied to the active ontology, and a new <code>OWLEntity</code> is constructed based on the new IRI. The new
+	 * <code>OWLEntity</code> is returned.
+	 * <p>
+	 * If the conditions are not not met, then this method gets the source and target cell from the given cell. If the source cell
+	 * is a datatype, then <code>log.warn</code> is called and null is returned. (The entity of the source cell will be used as 
+	 * the domain, which cannot be a datatype.) The domain and range are set to <code>sourceCell.getEntity</code> and 
+	 * <code>targetCell.getEntity</code> respectively. If the target cell is a datatype, then the property is set to the
+	 * <code>handleDataProperty</code> method from the axiom manager class. If it is not a datatype, then the property is set to
+	 * the <code>handleObjectProperty</code> method from the axiom manager class. Both handle methods are passed the new label, 
+	 * domain and range. The property is returned.  
 	 * 
 	 * @param cell provides the property entity that will be renamed to the new label.
 	 * @param newLabel creates the new IRI for the cell's property.
-	 * @return This returns an entity constructed from the property and the new IRI.
+	 * @return Returns an <code>OWLEntity</code> constructed based on the given label.
 	 */
 	private OWLEntity handleEdgeLabelChange(mxCell cell, String newLabel)
 	{
@@ -173,10 +192,16 @@ public class LabelChangeHandler
 	}
 
 	/**
-	 * If the given node cell is a named class, then a new IRI is constructed from the new label. If it is not named,
-	 * then the axiom manager adds a new class with the new label.
+	 * If the given cell is a class cell and is named, then this method stores <code>classCell.getEntity().asOWLClass</code> as
+	 * the current class. A new IRI is constructed with the new label.  The current class and the new IRI are then passed to the 
+	 * <code>changeIRI</code> method in the <code>OWLEntityRenamer</code> class to create a list of ontology changes. The changes
+	 * are applied to the active ontology, and a new <code>OWLEntity</code> is constructed based on the new IRI. The new
+	 * <code>OWLEntity</code> is returned.
 	 * <p>
-	 * This returns null if the given cell is not a class.
+	 * If the given cell is a class cell but is not named, then the result of <code>this.axiomManager.addNewClass</code> when it
+	 * is passed the new label, is returned.
+	 * <p>
+	 * If the given cell is not a class cell, then null is returned.
 	 * 
 	 * @param cell provides the class that will be renamed to the new label.
 	 * @param newLabel creates the new IRI for the cell's property.
