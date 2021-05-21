@@ -36,9 +36,9 @@ public class DatatypeCell extends ComodideCell {
 	/**
 	 * The constructor for this class.
 	 * <p>
-	 * This geometry is set to a new instance of <code>mxGeometry</code> when the constructor is passed the given x and y positions,
-	 * and private width and height variables. This geometry's relative state is set to false. The style is set the private style
-	 * variable, and this vertex and this connectable are both set to true.
+	 * This geometry is set to a new instance of <code>mxGeometry</code> when the constructor of the new instance is passed the
+	 * given x and y positions, and private width and height variables. This geometry's relative state is set to false. The style 
+	 * is set the private style variable, and this vertex and this connectable are both set to true.
 	 * 
 	 * @param owlEntity is passed to the super class constructor.
 	 * @param positionX is passed to the constructor of the new geometry.

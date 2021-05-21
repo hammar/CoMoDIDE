@@ -50,7 +50,8 @@ import com.mxgraph.model.mxGraphModel;
 import com.mxgraph.model.mxICell;
 
 /**
- * (TODO)
+ * The purpose of this class is to handle changes from the active ontology, and update the schema diagram appropriately. This
+ * class contains functionality for adding axioms, handling <code>OWLOntologyChange</code> objects, and removing axioms.  
  * 
  * @author cogan
  *
@@ -194,7 +195,7 @@ public class UpdateFromOntologyHandler
 	
 	/**
 	 * This method traverses the ontology looking for the classes that should be connected by the property as an edge
-	 * on the schema diagram. (TODO)
+	 * on the schema diagram.
 	 * 
 	 * @param property is used to find and return each of its edge's sources and targets.
 	 * @param ontology is a reference to the active ontology.
@@ -291,9 +292,23 @@ public class UpdateFromOntologyHandler
 		return retVal;
 	}
 
-	/** (TODO)
-	 * This handles when a declaration axiom is added to the active ontology. Once it has determined if the entity of the
-	 * axiom is a class, datatype, object property, or data property it updates the graph model and the schema diagram.
+	/** 
+	 * Handles when a declaration axiom is added to the active ontology. This method casts the given axiom as a declaration axiom
+	 * and unpacks it's entity into a local variable. If the IRI of the entity contains a web site URL for ontology design
+	 * patterns, then this method will return.
+	 * <p>
+	 * If the entity is an <code>OWLClass</code> or an <code>OWLDatatype</code>, then this method will retrieve the opla-sd
+	 * annotations for the entity. The graph model will then begin updating, and this method will try to add the entity 
+	 * to the schema diagram.
+	 * <p>
+	 * If the entity is an <code>OWLObjectProperty</code> or an <code>OWLDataProperty</code>, then the entity is cast to a
+	 * property. A set is created for the source and target edges that should be rendered for this property, and the graph model 
+	 * will begin updating. For each source and target pair, this method will save the source and target in local variables and
+	 * save the x-y coordinates for the entity as the source position. <code>schemaDiagram.addClass</code> is passed the source
+	 * and the left and right source position. The result of adding the class is saved as the source cell. The process is repeated
+	 * for the target cell. Finally, <code>schemaDiagram.addPropertyEdge</code> is passed the property, source cell, and target 
+	 * cell.
+	 * 
 	 * 
 	 * @param ontology is a reference to the active ontology.
 	 * @param axiom is the declaration axiom being added to the active ontology.
@@ -376,10 +391,16 @@ public class UpdateFromOntologyHandler
 	}
 
 	/**
-	 * This handles when a sub class axiom is being removed from the active ontology. It finds and removes the reference to
-	 * the given axiom's sub class and super class. If the axiom has restrictions it rerenders the edges.
+	 * Handles when a sub class axiom is being removed from the active ontology. This method unpacks the superclass expression
+	 * and subclass expression from the given axiom, and checks if they are named. If they are both named then they are passed
+	 * to <code>schemaDiagram.getCell</code> as classes. The results are cast to class cells and saved to superclass and 
+	 * subclass cell variables respectively. <code>schemaDiagram.removeSubClassEdge</code> is passed the superclass cell
+	 * and subclass cell variables to remove the subclass edge.
+	 * <p>
+	 * If the either superclass or subclass expressions are not named, then this is potentially a scoped domain/range.
+	 * This method will recompute valid edges and remove any non-valid occurrences of this edge in the diagram.
 	 * 
-	 * @param axiom is the sub class axiom being removed from the ontology.
+	 * @param axiom is the subclass axiom being removed from the ontology.
 	 * @param ontology is a reference to the active ontology.
 	 */
 	private void handleRemoveSubClassOfAxiom(OWLSubClassOfAxiom axiom, OWLOntology ontology) {
@@ -414,11 +435,13 @@ public class UpdateFromOntologyHandler
 		}
 	}
 	
-	/**
-	 * Rerenders the edges of a property by finding all of the edge cells and constructing a pair of source and
-	 * target entities. If the pair is not in the set of valid edges it is removed. Every unrendered edge is rendered.
+	/** 
+	 * This method iterates over all existing cells on the diagram. For each cell that is an edge, a pair of source and target
+	 * entities are constructed to represent an edge. If the pair is not in the set of valid edges computed by 
+	 * the <code>getEdgeSourcesAndTargets</code> method, then it is removed. For each valid edge that is found on the canvas,
+	 * it is removed from the set so that only the un-rendered edges remain.
 	 * 
-	 * @param property provides a list of source and target entities that will be rerendered.
+	 * @param property provides a list of source and target entities that will be re-rendered.
 	 * @param ontology is a reference to the active ontology.
 	 */
 	private void reRenderAllPropertyEdges(OWLProperty property, OWLOntology ontology) {
@@ -469,10 +492,16 @@ public class UpdateFromOntologyHandler
 	}
 	
 	/**
-	 *  This gets the parent IRI from the subject of the axiom and then uses it to find the appropriate cell to move.
-	 *  Once it has found the cell, it updates the graph model.
+	 *  The subject, property, and value are unpacked from the given axiom. This method then checks if the property equals 
+	 *  <code>PositioningOperations.entityPositionX</code> or <code>PositioningOperations.entityPositiony</code>, the subject
+	 *  is an instance of an <code>OWLAnonymousIndividual</code>, the value is literal, and the value as a literal is double.
+	 *  If the previous statement is true, then subject is cast to an <code>OWLAnonymousIndividual</code> and saved as the 
+	 *  subject individual.
+	 *  For each candidate parent annotation in the annotation axioms from the active ontology, this method will check if the
+	 *  parent assertion is on an IRI entity. If it is, then that is the actual entity of concern. This method will then find and
+	 *  update the corresponding cell on the canvas.
 	 *  
-	 * @param axiom is the annotation assertion axiom being added to the active ontology.
+	 * @param axiom is the annotation assertion axiom being added to the ontology.
 	 * @param ontology is a reference to the active ontology.
 	 */
 	private void handleAddAnnotationAssertionAxiom(OWLAnnotationAssertionAxiom axiom, OWLOntology ontology) {
@@ -492,7 +521,7 @@ public class UpdateFromOntologyHandler
 				if (candidateParentAnnotation.getValue().equals(subjectIndividual) &&
 						candidateParentAnnotation.getSubject() instanceof IRI) {
 					// If the parent assertion is on an IRI entity, that is the actual entity
-					// that our positiong assertion concerns. Find and update the corresponding
+					// that our positioning assertion concerns. Find and update the corresponding
 					// cell on the canvas.
 					IRI subjectIRI = (IRI)candidateParentAnnotation.getSubject();
 					double position = value.asLiteral().get().parseDouble();
@@ -500,7 +529,7 @@ public class UpdateFromOntologyHandler
 						if (cell instanceof ComodideCell) {
 							mxICell cellToMove;
 							if (cell instanceof PropertyEdgeCell) {
-								// If this occurs then we have a datatype edge; in that case we need to move the datatype that this cells points at
+								// If this occurs then we have a data type edge; in that case we need to move the data type that this cells points at
 								cellToMove = cell.getTarget();
 							}
 							else {
@@ -533,11 +562,20 @@ public class UpdateFromOntologyHandler
 	}
 	
 	/**
-	 * This handles when a sub class axiom is being added to the active ontology. It updates the graph model if the
-	 * super and sub class expressions of the axiom are named. If they aren't, it finds the property of the restricting class
-	 * and rerenders it's edges. 
+	 * Handles when a sub class axiom is being added to the active ontology. This method upnacks the superclass and subclass 
+	 * expressions from the given axiom. 
+	 * <p>
+	 * If they are both named then the graph model will begin updating. The superclass, as a class, is used to get its x-y 
+	 * position. The result of <code>schemaDiagram.addClass</code> when it is passed the superclass, left position, and right 
+	 * position, is saved as the superclass cell. The same is done to the subclass to get the subclass cell. Finally, the 
+	 * superclass cell and the subclass cell are passed to <code>schemaDiagram.addSubClassEdge</code> to update the schema
+	 * diagram.
+	 * <p>
+	 * If either the superclass or subclass expression is not named, then this method will check and cast one of them as an
+	 * <code>OWLRestriction</code>. The property of the restricted expression is unpacked, if the property is named, then
+	 * the <code>reRenderAllPropertyEdges</code> is called.
 	 * 
-	 * @param axiom is the sub class axiom being added to the active ontology.
+	 * @param axiom is the sub class axiom being added to the ontology.
 	 * @param ontology is a reference to the active ontology.
 	 */
 	private void handleAddSubClassOfAxiom(OWLSubClassOfAxiom axiom, OWLOntology ontology)
