@@ -1,1 +1,0 @@
-typeSearchIndex = [{"l":"All Classes","url":"allclasses-index.html"},{"p":"com.comodide.axiomatization","l":"AxiomManager"},{"p":"com.comodide.axiomatization","l":"OWLAxAxiomFactory"},{"p":"com.comodide.axiomatization","l":"OWLAxAxiomType"},{"p":"com.comodide.axiomatization","l":"SimpleAxiomParser"}]
